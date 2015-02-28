@@ -75,6 +75,18 @@ ajax(
         items: menuItems
       }]
     });
+		// Add a click listener for select button click
+		resultsMenu.on('select', function(event) {
+
+  // Show a card with clicked item details
+  var detailCard = new UI.Card({
+    title: menuItems[event.itemIndex].title,
+    body: menuItems[event.itemIndex].subtitle,
+  });
+
+  // Show the new Card
+  detailCard.show();
+});
 
     // Show the Menu, hide the splash
     resultsMenu.show();

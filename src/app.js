@@ -20,7 +20,7 @@ var parseFeed = function(data, quantity) {
 		}
 		else
 			pow = "Powered off";
-		if(error == "null"){
+		if(error != "none"){
 			items.push({
 				title:name,
 				subtitle:error,
@@ -71,12 +71,12 @@ splashWindow.show();
 // Make request to openweathermap.org
 ajax(
   {
-    url:'http://jacksampson.info/farmdata.json',
+    url:'http://jacksampson.info/farmdata.php',
     type:'json'
   },
   function(data) {
     // Create an array of Menu items
-     menuItems = parseFeed(data, 3);
+     menuItems = parseFeed(data,4);
 
     // Construct Menu to show to user
     var resultsMenu = new UI.Menu({
@@ -91,13 +91,18 @@ ajax(
   // Show a card with clicked item details
 			menuItems[event.itemIndex].eHours = Math.round(menuItems[event.itemIndex].eHours*10)/10;
 
-  var detailCard = new UI.Card({
-    title: menuItems[event.itemIndex].name,
-    body:  menuItems[event.itemIndex].pow+ "\n" +
-					"Engine run time = "+ menuItems[event.itemIndex].eHours+ "\n" +
-					"Errors = "+ menuItems[event.itemIndex].error,
+	var titleText =  menuItems[event.itemIndex].name;
+	var bodyText =  "___________________" + "\n"+ menuItems[event.itemIndex].pow+ "\n" +
+			"Engine run time = "+ menuItems[event.itemIndex].eHours+ "\n" +
+			"Errors = "+ menuItems[event.itemIndex].error;
+			
+	var detailCard = new UI.Card({
+    title: titleText,
+    body: bodyText
   });
-  // Show the new Card
+			
+  //Make and Show the new Card
+
   detailCard.show();
 });
 

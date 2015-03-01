@@ -93,7 +93,7 @@ ajax(
 
 	var titleText =  menuItems[event.itemIndex].name;
 	var bodyText =  "___________________" + "\n"+ menuItems[event.itemIndex].pow+ "\n" +
-			"Engine run time = "+ menuItems[event.itemIndex].eHours+ "\n" +
+			"Engine run hours = "+ menuItems[event.itemIndex].eHours+ "\n" +
 			"Errors = "+ menuItems[event.itemIndex].error;
 			
 	var detailCard = new UI.Card({

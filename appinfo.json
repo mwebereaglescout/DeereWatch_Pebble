@@ -29,14 +29,14 @@
                 "type": "font"
             },
             {
-                "file": "images/Tractor PNG.png",
-                "name": "IMAGES_TRACTOR_PNG_PNG",
-                "type": "png"
-            },
-            {
                 "file": "images/JD Logo.png",
                 "menuIcon": true,
                 "name": "IMAGES_JD_LOGO_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/Tractor PNG.png",
+                "name": "IMAGES_TRACTOR_PNG_PNG",
                 "type": "png"
             }
         ]

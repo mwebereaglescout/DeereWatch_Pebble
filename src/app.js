@@ -1,31 +1,56 @@
 var UI = require('ui');
 var ajax = require('ajax');
 var Vector2 = require('vector2');
+var Vibe = require('ui/vibe');
+var menuItems;
 
-//var parseData = function(data, quantity) {
- // var items = [];
- // for(var i = 0; i < quantity; i++) {
-    // Always upper case the description string
-  //  var title = data.list[i].weather[0].main;
- //   title = title.charAt(0).toUpperCase() + title.substring(1);
-
-    // Get date/time substring
- //   var time = data.list[i].dt_txt;
- //   time = time.substring(time.indexOf('-') + 1, time.indexOf(':') + 3);
-
+var parseFeed = function(data, quantity) {
+  var items = [];
+  for(var i = 0; i < quantity; i++) {
+    // extraplates data
+    var name = data[i].name;
+    var id = data[i].id;
+    var pow  = data[i].power;
+		var eHours  = data[i].engineHours;
+		var error  = data[i].errors;
+    
     // Add to menu items array
- //   items.push({
- //     title:title,
- //     subtitle:time
- //   });
-//  }
+		if(pow == "1"){
+			pow = "Powered on";
+		}
+		else
+			pow = "Powered off";
+		if(error == "null"){
+			items.push({
+				title:name,
+				subtitle:error,
+				name:name,
+    	  id:id,
+				pow:pow,
+				eHours:eHours,
+				error:error,
+    		});
+		}
+		else{
+			items.push({
+				title:name,
+				subtitle:pow,
+				name:name,
+   		  id:id,
+				pow:pow,
+				eHours:eHours,
+				error:error,
+    	});	
+		}
+	//end of for loop
+  }
 
   // Finally return whole array
-//  return items;
-//};
+  return items;
+};
 
 // Show splash screen while waiting for data
-var splashScreen = new UI.Window();
+var splashWindow = new UI.Window();
 
 // Text element to inform user
 var text = new UI.Text({
@@ -40,38 +65,23 @@ var text = new UI.Text({
 });
 
 // Add to splashWindow and show
-splashScreen.add(text);
-splashScreen.show();
+splashWindow.add(text);
+splashWindow.show();
 
 // Make request to openweathermap.org
-
 ajax(
   {
-    url:'http://api.openweathermap.org/data/2.5/forecast?q=Effingham',
+    url:'http://jacksampson.info/farmdata.json',
     type:'json'
   },
   function(data) {
     // Create an array of Menu items
-    var menuItems = [
-  {
-    title: "Combine",
-    subtitle: "Opperational"
-  },
-  {
-    title: "Tractor 2203",
-    subtitle: "Fuel Low"
-  },
-  {
-    title: "Tractor 340",
-    subtitle: "Opperational"
-  }
-];
-				//parseData(data, 10);
+     menuItems = parseFeed(data, 3);
 
     // Construct Menu to show to user
     var resultsMenu = new UI.Menu({
       sections: [{
-        title: 'My Deere Fleet',
+        title: 'My Fleet',
         items: menuItems
       }]
     });
@@ -79,18 +89,22 @@ ajax(
 		resultsMenu.on('select', function(event) {
 
   // Show a card with clicked item details
-  var detailCard = new UI.Card({
-    title: menuItems[event.itemIndex].title,
-    body: menuItems[event.itemIndex].subtitle,
-  });
+			menuItems[event.itemIndex].eHours = Math.round(menuItems[event.itemIndex].eHours*10)/10;
 
+  var detailCard = new UI.Card({
+    title: menuItems[event.itemIndex].name,
+    body:  menuItems[event.itemIndex].pow+ "\n" +
+					"Engine run time = "+ menuItems[event.itemIndex].eHours+ "\n" +
+					"Errors = "+ menuItems[event.itemIndex].error,
+  });
   // Show the new Card
   detailCard.show();
 });
 
     // Show the Menu, hide the splash
+		Vibe.vibrate('short');
     resultsMenu.show();
-    splashScreen.hide();
+    splashWindow.hide();
   },
   function(error) {
     console.log('Download failed: ' + error);
